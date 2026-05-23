@@ -89,15 +89,18 @@ dblm query "<question>" --module <name>         # cross-database module query
 
 ### When to use `--db <connection>` vs `--db <connection/database>`
 
+**Default: always use the bare connection name** (`--db <connection>`). This queries all indexed databases on that connection and is the correct default for every query.
+
+Only switch to `--db <connection/database>` when the user **explicitly names a specific database** in their request. Do not narrow to a specific database to "reduce noise" or "improve speed" on your own initiative — that is the user's decision.
+
 | Situation | Use |
 |---|---|
-| Don't know which DB holds the data | `--db <connection>` |
+| Default / don't know which DB holds the data | `--db <connection>` |
 | Question spans multiple DBs on the same connection | `--db <connection>` |
-| User specifies or implies a specific database | `--db <connection/database>` |
-| Prior query/index output confirms the exact DB | `--db <connection/database>` |
-| Scoping to reduce noise / improve speed | `--db <connection/database>` |
+| No `--db` specified at all | `--db <connection>` (bare connection) |
+| User explicitly names a specific database | `--db <connection/database>` |
 
-**Rule of thumb:** Start with the bare connection name when uncertain. Once you know the specific database (from index output, prior results, or user input), switch to `<connection/database>` for precision.
+**Never** infer or assume a specific database from prior context alone — always default to the bare connection unless the user tells you otherwise.
 
 ### Raw SQL — last resort only
 
@@ -230,7 +233,7 @@ dblm query "<question>" --remote <alias>
 
 - dblm is a **read-only query tool** — never suggest it for mutations, DDL, or writes of any kind.
 - When the user asks a database question, run `dblm query` with NLQ. Do not write raw SQL unless NLQ has structurally failed multiple times or the user explicitly requests it.
-- For `--db` targeting: use bare connection name when unsure or cross-DB; use `<connection/database>` once the specific DB is known.
+- For `--db` targeting: **always default to the bare connection name** (`--db <connection>`). Only use `--db <connection/database>` when the user explicitly specifies a database — never infer it to reduce noise or improve speed.
 - If no index exists for a connection, suggest running `dblm index add` first.
 - If LLM provider is not configured, suggest `dblm config` or setting `ANTHROPIC_API_KEY`.
 - For cross-database questions, use a bare connection name or `--module`.
