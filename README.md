@@ -91,6 +91,7 @@ dblm query "how many users signed up this month" --db mydb
 
 | Version | Date | Notes |
 |---|---|---|
+| [v1.0.3](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.0.3) | 2026-05-23 | |
 | [v1.0.1](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.0.1) | 2026-05-23 | Initial public release |
 
 ---
