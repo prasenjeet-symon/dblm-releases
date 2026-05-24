@@ -8,13 +8,21 @@ Supports Postgres, MySQL, SQLite, MongoDB, and ClickHouse.
 
 ## Install
 
-### macOS / Linux (recommended)
+### macOS / Linux
 
 ```sh
-curl -sSL https://raw.githubusercontent.com/prasenjeet-symon/dblm-releases/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/prasenjeet-symon/dblm-releases/main/install.sh | sh
 ```
 
-This auto-detects your OS and architecture, downloads the correct binary, and installs it to `/usr/local/bin/dblm`.
+Installs the latest release binary to `/usr/local/bin`. Uses `sudo` only if the directory isn't writable.
+
+### Windows (PowerShell)
+
+```powershell
+irm https://raw.githubusercontent.com/prasenjeet-symon/dblm-releases/main/install.ps1 | iex
+```
+
+Installs to `%LOCALAPPDATA%\dblm` and adds it to your user `PATH`. Open a new terminal after install.
 
 ### Manual download
 
@@ -24,17 +32,10 @@ Download the binary for your platform from the [latest release](https://github.c
 |---|---|
 | macOS (Apple Silicon) | `dblm_*_darwin_arm64.tar.gz` |
 | macOS (Intel) | `dblm_*_darwin_x86_64.tar.gz` |
-| Linux (x86_64) | `dblm_*_linux_x86_64.tar.gz` |
+| Linux (x86-64) | `dblm_*_linux_x86_64.tar.gz` |
 | Linux (ARM64) | `dblm_*_linux_arm64.tar.gz` |
-| Windows (x86_64) | `dblm_*_windows_x86_64.zip` |
+| Windows (x86-64) | `dblm_*_windows_x86_64.zip` |
 | Windows (ARM64) | `dblm_*_windows_arm64.zip` |
-
-Extract and move the binary to a directory in your `$PATH`:
-
-```sh
-tar -xzf dblm_*_darwin_arm64.tar.gz
-mv dblm /usr/local/bin/
-```
 
 ### Verify installation
 
@@ -46,28 +47,30 @@ dblm version
 
 ## Getting started
 
-**1. Activate your license**
-```sh
-dblm license activate <your-license-key>
-```
-
-**2. Configure your LLM provider**
-```sh
-dblm config
-```
-Or set an environment variable:
+**1. Configure your LLM provider**
 ```sh
 export ANTHROPIC_API_KEY=sk-ant-...
 ```
+Or use Ollama:
+```sh
+export DBLM_LLM_PROVIDER=ollama
+export OLLAMA_API_KEY=<your-key>
+export OLLAMA_BASE_URL=https://ollama.com/v1
+```
 
-**3. Add a database connection**
+**2. Add a database connection**
 ```sh
 dblm connect add mydb --driver postgres --dsn "postgres://user:pass@localhost:5432/"
 ```
 
-**4. Index the schema**
+**3. Index the schema**
 ```sh
-dblm index add mydb --db mydb_name
+dblm index add mydb
+```
+
+**4. Generate knowledge docs (optional, improves query quality)**
+```sh
+dblm knowledge auto mydb
 ```
 
 **5. Start querying**
@@ -101,5 +104,5 @@ dblm query "how many users signed up this month" --db mydb
 
 ## Links
 
-- [Documentation](https://github.com/prasenjeet-symon/dblm-releases/releases/latest)
-- [Report an issue](https://github.com/prasenjeet-symon/dblm-releases/issues)
+- [Source code & full documentation](https://github.com/prasenjeet-symon/dblm)
+- [Report an issue](https://github.com/prasenjeet-symon/dblm/issues)
