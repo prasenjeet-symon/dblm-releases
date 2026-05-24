@@ -94,7 +94,7 @@ dblm query "how many users signed up this month" --db mydb
 
 | Version | Date | Notes |
 |---|---|---|
-| [v1.0.6](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.0.6) | 2026-05-24 | |
+| [v1.0.6](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.0.6) | 2026-05-24 | Batched knowledge generation for large schemas (100+ tables); fixes for silent load errors, empty-schema guard, and module knowledge warnings |
 | [v1.0.5](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.0.5) | 2026-05-23 | |
 | [v1.0.4](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.0.4) | 2026-05-23 | |
 | [v1.0.3](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.0.3) | 2026-05-23 | |
