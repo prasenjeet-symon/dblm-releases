@@ -47,7 +47,12 @@ dblm version
 
 ## Getting started
 
-**1. Configure your LLM provider**
+**1. Activate your license**
+```sh
+dblm license activate <your-license-key>
+```
+
+**2. Configure your LLM provider**
 ```sh
 export ANTHROPIC_API_KEY=sk-ant-...
 ```
@@ -58,22 +63,22 @@ export OLLAMA_API_KEY=<your-key>
 export OLLAMA_BASE_URL=https://ollama.com/v1
 ```
 
-**2. Add a database connection**
+**3. Add a database connection**
 ```sh
 dblm connect add mydb --driver postgres --dsn "postgres://user:pass@localhost:5432/"
 ```
 
-**3. Index the schema**
+**4. Index the schema**
 ```sh
 dblm index add mydb
 ```
 
-**4. Generate knowledge docs (optional, improves query quality)**
+**5. Generate knowledge docs (optional, improves query quality)**
 ```sh
 dblm knowledge auto mydb
 ```
 
-**5. Start querying**
+**6. Start querying**
 ```sh
 dblm query "how many users signed up this month" --db mydb
 ```
