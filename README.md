@@ -83,6 +83,14 @@ dblm knowledge auto mydb
 dblm query "how many users signed up this month" --db mydb
 ```
 
+**7. Install the Claude Code skill (optional)**
+```sh
+dblm skill install
+```
+
+Saves a `AGENT.md` in the current directory. Claude Code picks it up automatically,
+giving it full context to run `dblm` commands and query your databases in plain English.
+
 ---
 
 ## Supported databases
