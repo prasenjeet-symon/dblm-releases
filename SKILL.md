@@ -6,7 +6,7 @@ description: Interact with dblm — a natural language CLI for querying multiple
 
 You are a dblm expert assistant. dblm is a CLI tool that lets users query databases in plain English. It supports Postgres, MySQL, SQLite, MongoDB, and ClickHouse.
 
-When the user asks you to do something with their database(s), use `dblm` commands via the shell. Always prefer natural language queries over raw SQL unless the user explicitly asks for raw SQL.
+When the user asks you to do something with their database(s), use `dblm` commands via the shell. **HARD RULE: rely on natural-language `dblm query` for every database question — do NOT write raw SQL.** `--raw` is a rare exception, only when NLQ has structurally failed 2+ times after rewording, or the user explicitly asks for it (see §4).
 
 ---
 
@@ -125,22 +125,28 @@ Only switch to `--db <connection/database>` when the user **explicitly names a s
 
 **Never** infer or assume a specific database from prior context alone — always default to the bare connection unless the user tells you otherwise.
 
-### Raw SQL — last resort only
+### Raw SQL — HARD RULE: almost never
 
-**Never write raw SQL by default.** Always attempt NLQ first:
+**HARD RULE: Do NOT write raw SQL. Always answer database questions with natural-language `dblm query`.** Raw SQL (`--raw`) is the rare exception, not a tool you reach for. dblm's whole purpose is to generate the SQL for you — let it. Writing SQL yourself defeats the point and bypasses the knowledge, validation, and retry layers built into the query engine.
 
 ```sh
-# Always try NLQ first — bare connection name
+# ALWAYS do this — describe what you want in plain English
 dblm query "how many orders were placed last week" --db myconn
 
-# Only use --raw when NLQ has structurally failed (raw requires a specific database)
-dblm query "SELECT id, COUNT(*) FROM events GROUP BY id HAVING COUNT(*) > 1" --db myconn/events --raw
+# Rephrase and retry NLQ if the first attempt isn't right — do NOT jump to raw SQL
+dblm query "count distinct event ids that appear more than once" --db myconn
 ```
 
-**Only use `--raw` when:**
-1. NLQ has failed 2+ times for the same question and the error is structural (not a poorly worded question)
-2. The user explicitly asks for raw SQL
-3. Debugging: the LLM-generated SQL is wrong and you need to run a hand-corrected version directly
+**`--raw` is permitted ONLY when ALL of these hold:**
+1. The SAME question has already failed via NLQ **at least twice**, AND
+2. The failure is **structural** (the engine genuinely cannot express it), not just a poorly worded question that rephrasing would fix, AND
+3. You have already tried **rewording** the natural-language question and it still fails.
+
+**Plus** these always-allowed cases:
+- The user **explicitly** asks for raw SQL ("run this SQL", "use --raw").
+- Debugging: the LLM-generated SQL is known-wrong and you need to run a hand-corrected version to diagnose.
+
+**If in doubt, do NOT use `--raw`.** Reword the NLQ instead. Anything a SELECT can express — aggregations, filters, JOINs, subqueries, window functions, CTEs, GROUP BY/HAVING — must go through NLQ, never `--raw`. When NLQ fails, your first move is to rephrase the question, not to hand-write SQL.
 
 **Never use `--raw` for** anything NLQ can express — SELECT queries, aggregations, filtering, joins, subqueries, window functions, etc.
 
@@ -256,7 +262,7 @@ dblm query "<question>" --remote <alias>
 
 - **Discover first.** Before any query, run `dblm connect list` and `dblm index list` to see the available connections and indexed databases. Never guess names — map the user's request to a real, indexed connection.
 - dblm is a **read-only query tool** — never suggest it for mutations, DDL, or writes of any kind.
-- When the user asks a database question, run `dblm query` with NLQ. Do not write raw SQL unless NLQ has structurally failed multiple times or the user explicitly requests it.
+- **HARD RULE — rely on NLQ, not raw SQL.** Answer every database question with natural-language `dblm query`. `--raw` is the rare exception, allowed only when the same question has failed via NLQ 2+ times for a *structural* reason (after rewording), or when the user explicitly asks for raw SQL. When NLQ fails, rephrase the question — do not hand-write SQL. If in doubt, do not use `--raw`.
 - For `--db` targeting: **always default to the bare connection name** (`--db <connection>`). Only use `--db <connection/database>` when the user explicitly specifies a database — never infer it to reduce noise or improve speed.
 - If no index exists for a connection, suggest running `dblm index add` first.
 - If LLM provider is not configured, suggest `dblm config` or setting `ANTHROPIC_API_KEY`.
