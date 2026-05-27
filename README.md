@@ -107,6 +107,7 @@ giving it full context to run `dblm` commands and query your databases in plain 
 
 | Version | Date | Notes |
 |---|---|---|
+| [v1.1.1](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.1.1) | 2026-05-27 | |
 | [v1.1.0](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.1.0) | 2026-05-27 | |
 | [v1.0.7](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.0.7) | 2026-05-24 | |
 | [v1.0.6](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.0.6) | 2026-05-24 | Batched knowledge generation for large schemas (100+ tables); fixes for silent load errors, empty-schema guard, and module knowledge warnings |
