@@ -10,6 +10,29 @@ When the user asks you to do something with their database(s), use `dblm` comman
 
 ---
 
+## 0. Workflow — ALWAYS start here
+
+Before running any query, **discover what is actually available**. Never guess connection or database names from the conversation alone.
+
+1. **List connections** — see what is configured:
+   ```sh
+   dblm connect list
+   ```
+2. **List indexes** — see which databases are indexed and therefore queryable:
+   ```sh
+   dblm index list
+   ```
+3. **Run the query against the bare connection name** (not a specific database):
+   ```sh
+   dblm query "<question>" --db <connection>
+   ```
+
+Only after the two discovery steps should you run `dblm query`. If the connection the user wants is not yet indexed, run `dblm index add <connection> --db <database>` first.
+
+**Always favour the bare connection name** (`--db <connection>`). The engine automatically searches across every indexed database on that connection and picks the right one — you do NOT need to, and should not, narrow to `--db <connection/database>` unless the user explicitly names a database. Picking a specific database yourself risks targeting the wrong one and skips databases that might hold the answer.
+
+---
+
 ## 1. Configuration — `dblm config`
 
 Interactive setup of LLM provider, API key, model, and base URL. Saves to `~/.dblm/config.json`.
@@ -74,15 +97,15 @@ dblm index list
 Ask questions in plain English. The LLM generates and executes SQL.
 
 ```sh
-dblm query "<question>"                         # query all connections
-dblm query "<question>" --db <connection>       # expands to all indexed DBs on that connection
-dblm query "<question>" --db <conn/database>    # target specific database
-dblm query "<question>" --db a,b                # multiple targets
-dblm query "<sql>" --db <conn/database> --raw   # execute raw SQL (last resort only)
-dblm query "<question>" --no-summary            # skip LLM summarization
-dblm query "<question>" --json                  # output as JSON
-dblm query "<question>" --context "user: alice" # inject user context into prompt
-dblm query "<question>" --module <name>         # cross-database module query
+dblm query "<question>" --db <connection>       # PREFERRED — searches all indexed DBs on the connection
+dblm query "<question>"                          # query all connections
+dblm query "<question>" --db a,b                 # multiple connections
+dblm query "<question>" --db <conn/database>     # ONLY when the user explicitly names a database
+dblm query "<sql>" --db <conn/database> --raw    # execute raw SQL (last resort only)
+dblm query "<question>" --no-summary             # skip LLM summarization
+dblm query "<question>" --json                   # output as JSON
+dblm query "<question>" --context "user: alice"  # inject user context into prompt
+dblm query "<question>" --module <name>          # cross-database module query
 ```
 
 > **dblm is a read-only query tool.** It does not support schema mutations (CREATE, ALTER, DROP, INSERT, UPDATE, DELETE). Never attempt DDL or DML via `--raw` or otherwise — use your database client directly for those operations.
@@ -107,10 +130,10 @@ Only switch to `--db <connection/database>` when the user **explicitly names a s
 **Never write raw SQL by default.** Always attempt NLQ first:
 
 ```sh
-# Always try NLQ first
-dblm query "how many orders were placed last week" --db myconn/orders
+# Always try NLQ first — bare connection name
+dblm query "how many orders were placed last week" --db myconn
 
-# Only use --raw when NLQ has structurally failed
+# Only use --raw when NLQ has structurally failed (raw requires a specific database)
 dblm query "SELECT id, COUNT(*) FROM events GROUP BY id HAVING COUNT(*) > 1" --db myconn/events --raw
 ```
 
@@ -231,6 +254,7 @@ dblm query "<question>" --remote <alias>
 
 ## Behavior guidelines
 
+- **Discover first.** Before any query, run `dblm connect list` and `dblm index list` to see the available connections and indexed databases. Never guess names — map the user's request to a real, indexed connection.
 - dblm is a **read-only query tool** — never suggest it for mutations, DDL, or writes of any kind.
 - When the user asks a database question, run `dblm query` with NLQ. Do not write raw SQL unless NLQ has structurally failed multiple times or the user explicitly requests it.
 - For `--db` targeting: **always default to the bare connection name** (`--db <connection>`). Only use `--db <connection/database>` when the user explicitly specifies a database — never infer it to reduce noise or improve speed.
