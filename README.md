@@ -107,6 +107,7 @@ giving it full context to run `dblm` commands and query your databases in plain 
 
 | Version | Date | Notes |
 |---|---|---|
+| [v1.1.6](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.1.6) | 2026-05-28 | |
 | [v1.1.5](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.1.5) | 2026-05-28 | |
 | [v1.1.4](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.1.4) | 2026-05-27 | |
 | [v1.1.3](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v1.1.3) | 2026-05-27 | |
