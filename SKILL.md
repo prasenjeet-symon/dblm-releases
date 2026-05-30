@@ -107,6 +107,11 @@ dblm query "<question>" --no-summary             # skip LLM summarization
 dblm query "<question>" --json                   # output as JSON
 dblm query "<question>" --context "user: alice"  # inject user context into prompt
 dblm query "<question>" --module <name>          # cross-database module query
+dblm query "<question>" --db <conn> --report html           # export LLM-designed HTML report
+dblm query "<question>" --db <conn> --report pdf            # export PDF (requires Chrome)
+dblm query "<question>" --db <conn> --report png            # export PNG screenshot (requires Chrome)
+dblm query "<question>" --db <conn> --report csv            # export raw data as CSV
+dblm query "<question>" --db <conn> --report html --output /tmp/report.html  # custom output path
 ```
 
 > **dblm is a read-only query tool.** It does not support schema mutations (CREATE, ALTER, DROP, INSERT, UPDATE, DELETE). Never attempt DDL or DML via `--raw` or otherwise — use your database client directly for those operations.
@@ -298,3 +303,4 @@ dblm query "<question>" --remote <alias>
 - For cross-database questions, use a bare connection name or `--module`.
 - Always show the generated SQL to the user so they can verify it.
 - If a query fails, explain the error and suggest rewording the NLQ before falling back to `--raw`.
+- **Report generation:** when the user asks for a report, chart, visualization, export, or shareable output of query results, add `--report html` (default recommendation), `--report pdf`, `--report png`, or `--report csv` to the query. HTML and PDF/PNG produce LLM-designed executive dashboards; CSV is data-only. `--report` is incompatible with `--stream`. Use `--output <path>` to set a custom file path.
