@@ -181,6 +181,7 @@ Or add to `~/.dblm/config.json`:
 
 | Config field | Env var | Default | Purpose |
 |---|---|---|---|
+| [v2.0.0](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v2.0.0) | 2026-06-30 | |
 | `base_url` | `DBLM_LLM_BASE_URL` or `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama server URL |
 | `model` | `DBLM_LLM_MODEL` | `llama3` | Model to use |
 | — | `DBLM_OLLAMA_API_KEY` or `OLLAMA_API_KEY` | — | API key if your Ollama setup requires one |
