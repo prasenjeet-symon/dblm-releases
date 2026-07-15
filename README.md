@@ -181,6 +181,7 @@ Or add to `~/.dblm/config.json`:
 
 | Config field | Env var | Default | Purpose |
 |---|---|---|---|
+| [v2.5.1](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v2.5.1) | 2026-07-15 | |
 | [v2.5.0](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v2.5.0) | 2026-07-15 | |
 | [v2.4.0](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v2.4.0) | 2026-07-10 | |
 | [v2.3.0](https://github.com/prasenjeet-symon/dblm-releases/releases/tag/v2.3.0) | 2026-07-10 | |
